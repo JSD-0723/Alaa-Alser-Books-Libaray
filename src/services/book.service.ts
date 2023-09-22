@@ -19,32 +19,20 @@ export class BookService {
   }
 
   getBookById = async (id: number): Promise<Book | null> => {
-    try {
-      const book = await this.bookRepository.findById(id)
-      return book || null
-    } catch (error) {
-      throw error
-    }
+    const book = await this.bookRepository.findById(id)
+    return book || null
   }
 
   updateBook = async (
     id: number,
     updatedBookData: IBook
   ): Promise<[number, Book[]]> => {
-    try {
-      const rowsUpdated = this.bookRepository.updateBook(id, updatedBookData)
-      return rowsUpdated
-    } catch (error) {
-      throw error
-    }
+    const rowsUpdated = this.bookRepository.updateBook(id, updatedBookData)
+    return rowsUpdated
   }
 
   deleteBook = async (id: number): Promise<number> => {
-    try {
-      const rowsDeleted = await this.bookRepository.deleteBook(id)
-      return rowsDeleted
-    } catch (error) {
-      throw error
-    }
+    const rowsDeleted = await this.bookRepository.deleteBook(id)
+    return rowsDeleted
   }
 }
