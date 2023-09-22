@@ -10,7 +10,7 @@ import { Request, Response } from 'express'
 import { Service } from 'typedi'
 
 import { BookService } from '../services/book.service'
-import { BookDTO } from '../DTO/bookDto'
+import { BookDTO } from '../DTO/book'
 import { asyncWrapper } from '../utils/asyncWrapper'
 import { SuccessResponse } from '../utils/SuccessResponse'
 import { BookValidation } from '../validations/book.validations'
