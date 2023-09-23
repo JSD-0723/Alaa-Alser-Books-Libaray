@@ -3,6 +3,7 @@ import { Service } from 'typedi'
 import { Book } from '../models/book.model'
 import { IBook } from '../types/books'
 import BookRepository from '../repositories/book.repository'
+import { NotFoundError } from '../utils/ApiError'
 
 @Service()
 export class BookService {
@@ -18,20 +19,35 @@ export class BookService {
     return await this.bookRepository.createBook({ name, author, isbn })
   }
 
-  getBookById = async (id: number): Promise<Book | null> => {
+  getBookById = async (id: number) => {
     const book = await this.bookRepository.findById(id)
-    return book || null
+
+    if (!book) {
+      throw new NotFoundError('Book not found')
+    }
+    return book
   }
 
   updateBook = async (
     id: number,
     updatedBookData: IBook
   ): Promise<[number, Book[]]> => {
+    const book = await this.bookRepository.findById(id)
+
+    if (!book) {
+      throw new NotFoundError('Book not found')
+    }
     const rowsUpdated = this.bookRepository.updateBook(id, updatedBookData)
     return rowsUpdated
   }
 
   deleteBook = async (id: number): Promise<number> => {
+    const book = await this.bookRepository.findById(id)
+
+    if (!book) {
+      throw new NotFoundError('Book not found')
+    }
+
     const rowsDeleted = await this.bookRepository.deleteBook(id)
     return rowsDeleted
   }

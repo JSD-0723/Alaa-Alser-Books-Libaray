@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=development ts-node-dev --respawn src/index.ts",
     "start": "NODE_ENV=production node dist/index.js",
     "build": "tsc -p .",
+    "preinstall": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check .",

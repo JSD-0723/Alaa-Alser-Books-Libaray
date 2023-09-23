@@ -37,12 +37,10 @@ export class BookController {
   })
 
   @Get(':id')
-  getBookById = asyncWrapper(async (req: Request, res: Response) => {
+  getBookById = asyncWrapper(async (req: Request) => {
     const { id } = req.params
     const book = await this.bookService.getBookById(Number(id))
-    if (!book) {
-      return res.status(404).json({ error: 'Book not found' })
-    }
+
     return new SuccessResponse(book)
   })
 
