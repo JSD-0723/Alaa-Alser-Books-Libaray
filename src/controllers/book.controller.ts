@@ -6,7 +6,7 @@ import {
   Put,
   Delete,
 } from '@overnightjs/core'
-import { Request, Response } from 'express'
+import { Request } from 'express'
 import { Service } from 'typedi'
 
 import { BookService } from '../services/book.service'
@@ -45,27 +45,20 @@ export class BookController {
   })
 
   @Put(':id')
-  updateBook = asyncWrapper(async (req: Request, res: Response) => {
+  updateBook = asyncWrapper(async (req: Request) => {
     const { id } = req.params
     const { name, author, isbn } = req.body
     const updatedBookData = new BookDTO(name, author, isbn)
-    const updateBook = await this.bookService.updateBook(
-      Number(id),
-      updatedBookData
-    )
-    if (updateBook[0] === 0) {
-      return res.status(404).json({ error: 'Book not found' })
-    }
+    await this.bookService.updateBook(Number(id), updatedBookData)
+
     return new SuccessResponse(updatedBookData)
   })
 
   @Delete(':id')
-  deleteBook = asyncWrapper(async (req: Request, res: Response) => {
+  deleteBook = asyncWrapper(async (req: Request) => {
     const { id } = req.params
     const rowsDeleted = await this.bookService.deleteBook(Number(id))
-    if (rowsDeleted === 0) {
-      return res.status(404).json({ error: 'Book not found' })
-    }
+
     return new SuccessResponse(rowsDeleted)
   })
 }

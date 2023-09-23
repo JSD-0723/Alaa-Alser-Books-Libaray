@@ -1,9 +1,10 @@
 import { Service } from 'typedi'
+import { StatusCodes } from 'http-status-codes'
 
 import { Book } from '../models/book.model'
 import { IBook } from '../types/books'
 import BookRepository from '../repositories/book.repository'
-import { NotFoundError } from '../utils/ApiError'
+import { ApiError } from '../utils/ApiError'
 
 @Service()
 export class BookService {
@@ -23,7 +24,7 @@ export class BookService {
     const book = await this.bookRepository.findById(id)
 
     if (!book) {
-      throw new NotFoundError('Book not found')
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Book not found')
     }
     return book
   }
@@ -35,7 +36,7 @@ export class BookService {
     const book = await this.bookRepository.findById(id)
 
     if (!book) {
-      throw new NotFoundError('Book not found')
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Book not found')
     }
     const rowsUpdated = this.bookRepository.updateBook(id, updatedBookData)
     return rowsUpdated
@@ -45,7 +46,7 @@ export class BookService {
     const book = await this.bookRepository.findById(id)
 
     if (!book) {
-      throw new NotFoundError('Book not found')
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Book not found')
     }
 
     const rowsDeleted = await this.bookRepository.deleteBook(id)
