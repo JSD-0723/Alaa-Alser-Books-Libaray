@@ -15,6 +15,7 @@ import { asyncWrapper } from '../utils/asyncWrapper'
 import { SuccessResponse } from '../utils/SuccessResponse'
 import { BookValidation } from '../validations/book.validations'
 import RequestValidator from '../middlewares/RequestValidator'
+import authMiddleware from '../middlewares/authMiddleware'
 
 @Service()
 @Controller('books')
@@ -22,6 +23,7 @@ export class BookController {
   constructor(public bookService: BookService) {}
 
   @Get('/')
+  @Middleware(authMiddleware)
   getAllBooks = asyncWrapper(async () => {
     const books = await this.bookService.getAllBooks()
     return new SuccessResponse(books)

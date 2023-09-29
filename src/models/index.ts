@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript'
 import { Book } from './book.model'
+import User from './user.model'
 import config from '../config/config'
 
 const sequelize = new Sequelize({
@@ -11,14 +12,14 @@ const sequelize = new Sequelize({
   logging: false,
 })
 
-sequelize.addModels([Book])
+sequelize.addModels([User, Book])
 
 export const initDB = async () => {
   try {
     await sequelize.authenticate()
     console.log('Connection has been established successfully.')
 
-    await sequelize.sync({ alter: true })
+    await sequelize.sync({ force: true })
     console.log('Database synchronized.')
   } catch (error) {
     console.error('Unable to connect to the database:', error)

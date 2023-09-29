@@ -5,9 +5,11 @@ import { Request, Response, NextFunction } from 'express'
 import * as bodyParser from 'body-parser'
 import 'dotenv/config'
 import swaggerUi from 'swagger-ui-express'
+import cookieParser from 'cookie-parser'
 
 import { initDB } from './models'
 import { BookController } from './controllers/book.controller'
+import AuthController from './controllers/auth.controller'
 import ErrorHandler from './middlewares/ErrorHandler'
 import { NotFoundError } from './utils/ApiError'
 import { swaggerDocument } from '../swagger'
@@ -30,16 +32,17 @@ export class App extends Server {
   private applyMiddleWares() {
     this.app.use(bodyParser.json())
     this.app.use(bodyParser.urlencoded({ extended: true }))
+    this.app.use(cookieParser())
 
     const bookController = Container.get(BookController)
-    super.addControllers([bookController])
+    const authController = Container.get(AuthController)
+    super.addControllers([bookController, authController])
 
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
     this.app.use((req: Request, res: Response, next: NextFunction) =>
       next(new NotFoundError(req.path))
     )
-
     this.app.use(ErrorHandler.handle())
   }
 
