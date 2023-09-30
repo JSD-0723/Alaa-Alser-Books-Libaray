@@ -40,6 +40,8 @@ export default class AuthService {
 
     const newUser = await this.authRepository.createUser(email, password)
 
+    newUser.password = ''
+
     if (!newUser) {
       throw new ApiError(
         StatusCodes.INTERNAL_SERVER_ERROR,
