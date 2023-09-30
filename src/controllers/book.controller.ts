@@ -30,7 +30,7 @@ export class BookController {
   })
 
   @Post('/')
-  @Middleware(RequestValidator.validate(BookValidation))
+  @Middleware([authMiddleware, RequestValidator.validate(BookValidation)])
   createBook = asyncWrapper(async (req: Request) => {
     const { name, author, isbn } = req.body
     const book = new BookDTO(name, author, isbn)
@@ -39,6 +39,7 @@ export class BookController {
   })
 
   @Get(':id')
+  @Middleware(authMiddleware)
   getBookById = asyncWrapper(async (req: Request) => {
     const { id } = req.params
     const book = await this.bookService.getBookById(Number(id))
@@ -47,6 +48,7 @@ export class BookController {
   })
 
   @Put(':id')
+  @Middleware([authMiddleware, RequestValidator.validate(BookValidation)])
   updateBook = asyncWrapper(async (req: Request) => {
     const { id } = req.params
     const { name, author, isbn } = req.body
@@ -57,6 +59,7 @@ export class BookController {
   })
 
   @Delete(':id')
+  @Middleware(authMiddleware)
   deleteBook = asyncWrapper(async (req: Request) => {
     const { id } = req.params
     const rowsDeleted = await this.bookService.deleteBook(Number(id))

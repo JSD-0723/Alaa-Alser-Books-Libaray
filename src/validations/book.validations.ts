@@ -2,11 +2,11 @@ import { IsNotEmpty } from 'class-validator'
 
 export class BookValidation {
   @IsNotEmpty()
-  name: string = ''
+  name!: string
 
   @IsNotEmpty()
-  author: string = ''
+  author!: string
 
   @IsNotEmpty()
-  isbn: string = ''
+  isbn!: string
 }

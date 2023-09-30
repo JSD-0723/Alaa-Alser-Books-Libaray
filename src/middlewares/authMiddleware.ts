@@ -3,21 +3,21 @@ import jwt from 'jsonwebtoken'
 import config from '../config/config'
 import { ApiError } from '../utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
-import { asyncWrapper } from '../utils/asyncWrapper'
 import AuthRepository from '../repositories/auth.repository'
 
-const authMiddleware = asyncWrapper(
-  async (req: Request, res: Response, next: NextFunction) => {
-      if (!req.headers.authorization) {
-          throw new ApiError(StatusCodes.UNAUTHORIZED, 'UNAUTHORIZED')
-        }
-        
-        const token = req.headers.authorization.split(' ')[1]
-        const userData: any = jwt.verify(token, config.jwtSecret as string)
-        console.log('data', userData)
+const authMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.headers.authorization) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'UNAUTHORIZED')
+  }
+  try {
+    const token = req.headers.authorization.split(' ')[1]
+    const userData: any = jwt.verify(token, config.jwtSecret as string)
 
     const email = userData && userData.email
-
 
     const authRepo = new AuthRepository()
 
@@ -27,9 +27,10 @@ const authMiddleware = asyncWrapper(
       req.user = user
       return next()
     }
-
     return new ApiError(StatusCodes.UNAUTHORIZED, 'Not Authorize User!')
+  } catch (error) {
+    next(error)
   }
-)
+}
 
 export default authMiddleware
